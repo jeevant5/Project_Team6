@@ -1,0 +1,9 @@
+services:
+  helpdesk:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      HELPDESK_DB_URL: jdbc:oracle:thin:@host.docker.internal:1521/XEPDB1
+      HELPDESK_DB_USER: helpdesk
+      HELPDESK_DB_PASSWORD: change-me
