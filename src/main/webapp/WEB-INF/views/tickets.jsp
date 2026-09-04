@@ -5,7 +5,7 @@
 <html>
 <head><title>Helpdesk | Tickets</title><link rel="stylesheet" href="${pageContext.request.contextPath}/assets/app.css"></head>
 <body>
-<header><div><p class="eyebrow">NORTHSTAR IT OPERATIONS</p><h1>Helpdesk workspace</h1></div><span class="user"><%= session.getAttribute("displayName") %> - <%= session.getAttribute("role") %></span></header>
+<header><div><p class="eyebrow">NORTHSTAR IT OPERATIONS</p><h1>Helpdesk workspace</h1></div><span class="user"><%= session.getAttribute("displayName") %> - <%= session.getAttribute("role") %> <form method="post" action="logout" style="display:inline"><button type="submit">Log out</button></form></span></header>
 <main>
 <% if ("assigned".equals(request.getParameter("message"))) { %><p class="success">Ticket assigned to you.</p><% } else if ("resolved".equals(request.getParameter("message"))) { %><p class="success">Ticket resolved.</p><% } else if ("updated".equals(request.getParameter("message"))) { %><p class="success">Ticket updated.</p><% } %>
 <section class="stats"><div><strong><%= ((int[])request.getAttribute("counts"))[0] %></strong><span>Open</span></div><div><strong><%= ((int[])request.getAttribute("counts"))[1] %></strong><span>In progress</span></div><div><strong><%= ((int[])request.getAttribute("counts"))[2] %></strong><span>Resolved</span></div><div><strong><%= ((int[])request.getAttribute("counts"))[3] %></strong><span>Closed</span></div></section>
