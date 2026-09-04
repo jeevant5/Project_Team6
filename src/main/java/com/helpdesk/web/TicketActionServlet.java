@@ -13,7 +13,18 @@ public class TicketActionServlet extends HttpServlet {
         if (id == null) { response.sendRedirect("login"); return; }
         String role = (String) session.getAttribute("role");
         if (!"TECHNICIAN".equals(role) && !"ADMIN".equals(role)) { response.sendError(HttpServletResponse.SC_FORBIDDEN, "Only technicians can manage tickets"); return; }
-        try { String action=request.getParameter("action"); long ticketId=Long.parseLong(request.getParameter("ticketId")); if ("assign".equals(action)) tickets.assign(ticketId,(Long)id); else tickets.addComment(ticketId,(Long)id,request.getParameter("body"),"resolve".equals(action)?"RESOLVED":"IN_PROGRESS"); response.sendRedirect("tickets"); }
+        try {
+            String action=request.getParameter("action");
+            long ticketId=Long.parseLong(request.getParameter("ticketId"));
+            String body=request.getParameter("body");
+            if ("assign".equals(action)) tickets.assign(ticketId,(Long)id);
+            else if ("resolve".equals(action)) {
+                if (body != null && !body.isBlank()) tickets.addComment(ticketId,(Long)id,body,"RESOLVED");
+                else tickets.resolve(ticketId);
+            } else if ("comment".equals(action) && body != null && !body.isBlank()) tickets.addComment(ticketId,(Long)id,body,"IN_PROGRESS");
+            else { response.sendError(HttpServletResponse.SC_BAD_REQUEST, "A comment is required"); return; }
+            response.sendRedirect("tickets");
+        }
         catch (Exception error) { throw new IOException(error); }
     }
 }

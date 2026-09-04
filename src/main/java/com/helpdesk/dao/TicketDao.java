@@ -45,6 +45,13 @@ public class TicketDao {
         }
     }
 
+    public void resolve(long ticketId) throws SQLException {
+        try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement("UPDATE tickets SET status='RESOLVED',updated_at=CURRENT_TIMESTAMP WHERE ticket_id=?")) {
+            statement.setLong(1, ticketId);
+            statement.executeUpdate();
+        }
+    }
+
     public int[] statusCounts() throws SQLException {
         int[] counts = new int[4];
         try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement("SELECT status,COUNT(*) FROM tickets GROUP BY status"); ResultSet result = statement.executeQuery()) {
