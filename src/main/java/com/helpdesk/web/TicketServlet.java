@@ -14,7 +14,7 @@ public class TicketServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("userId") == null) { response.sendRedirect("login"); return; }
-        try { request.setAttribute("tickets", tickets.findAll()); request.setAttribute("counts", tickets.statusCounts()); request.setAttribute("canManageTickets", isTicketManager(session)); request.getRequestDispatcher("/WEB-INF/views/tickets.jsp").forward(request,response); }
+        try { request.setAttribute("tickets", tickets.findAll()); request.setAttribute("comments", tickets.findComments()); request.setAttribute("counts", tickets.statusCounts()); request.setAttribute("canManageTickets", isTicketManager(session)); request.getRequestDispatcher("/WEB-INF/views/tickets.jsp").forward(request,response); }
         catch (Exception error) { throw new ServletException(error); }
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {

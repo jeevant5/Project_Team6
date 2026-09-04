@@ -2,10 +2,13 @@ package com.helpdesk.dao;
 
 import com.helpdesk.config.Database;
 import com.helpdesk.model.Ticket;
+import com.helpdesk.model.TicketComment;
 import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class TicketDao {
     public long create(long userId, String title, String description, String priority,
@@ -27,6 +30,15 @@ public class TicketDao {
             while (result.next()) tickets.add(new Ticket(result.getLong(1),result.getString(2),result.getString(3),result.getString(4),result.getString(5),result.getString(6),result.getString(7),result.getTimestamp(8)));
         }
         return tickets;
+    }
+
+    public Map<Long, List<TicketComment>> findComments() throws SQLException {
+        String sql = "SELECT c.ticket_id,u.display_name,c.body,c.created_at FROM ticket_comments c JOIN app_users u ON u.user_id=c.user_id ORDER BY c.created_at";
+        Map<Long, List<TicketComment>> comments = new HashMap<>();
+        try (Connection connection = Database.getConnection(); PreparedStatement statement = connection.prepareStatement(sql); ResultSet result = statement.executeQuery()) {
+            while (result.next()) comments.computeIfAbsent(result.getLong(1), ignored -> new ArrayList<>()).add(new TicketComment(result.getLong(1), result.getString(2), result.getString(3), result.getTimestamp(4)));
+        }
+        return comments;
     }
 
     public void assign(long ticketId, long technicianId) throws SQLException {
