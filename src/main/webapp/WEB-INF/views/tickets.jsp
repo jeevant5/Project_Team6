@@ -7,6 +7,7 @@
 <body>
 <header><div><p class="eyebrow">NORTHSTAR IT OPERATIONS</p><h1>Helpdesk workspace</h1></div><span class="user"><%= session.getAttribute("displayName") %> - <%= session.getAttribute("role") %></span></header>
 <main>
+<% if ("assigned".equals(request.getParameter("message"))) { %><p class="success">Ticket assigned to you.</p><% } else if ("resolved".equals(request.getParameter("message"))) { %><p class="success">Ticket resolved.</p><% } else if ("updated".equals(request.getParameter("message"))) { %><p class="success">Ticket updated.</p><% } %>
 <section class="stats"><div><strong><%= ((int[])request.getAttribute("counts"))[0] %></strong><span>Open</span></div><div><strong><%= ((int[])request.getAttribute("counts"))[1] %></strong><span>In progress</span></div><div><strong><%= ((int[])request.getAttribute("counts"))[2] %></strong><span>Resolved</span></div><div><strong><%= ((int[])request.getAttribute("counts"))[3] %></strong><span>Closed</span></div></section>
 <section class="layout">
 <form class="panel" method="post" enctype="multipart/form-data"><h2>Raise a ticket</h2><label>Title<input name="title" maxlength="150" required></label><label>Description<textarea name="description" rows="6" required></textarea></label><label>Priority<select name="priority"><option>LOW</option><option selected>MEDIUM</option><option>HIGH</option></select></label><label>Attachment<input type="file" name="attachment"></label><button>Submit ticket</button></form>

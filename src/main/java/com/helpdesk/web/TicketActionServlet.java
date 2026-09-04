@@ -17,13 +17,15 @@ public class TicketActionServlet extends HttpServlet {
             String action=request.getParameter("action");
             long ticketId=Long.parseLong(request.getParameter("ticketId"));
             String body=request.getParameter("body");
-            if ("assign".equals(action)) tickets.assign(ticketId,(Long)id);
+            String message;
+            if ("assign".equals(action)) { tickets.assign(ticketId,(Long)id); message = "assigned"; }
             else if ("resolve".equals(action)) {
                 if (body != null && !body.isBlank()) tickets.addComment(ticketId,(Long)id,body,"RESOLVED");
                 else tickets.resolve(ticketId);
-            } else if ("comment".equals(action) && body != null && !body.isBlank()) tickets.addComment(ticketId,(Long)id,body,"IN_PROGRESS");
+                message = "resolved";
+            } else if ("comment".equals(action) && body != null && !body.isBlank()) { tickets.addComment(ticketId,(Long)id,body,"IN_PROGRESS"); message = "updated"; }
             else { response.sendError(HttpServletResponse.SC_BAD_REQUEST, "A comment is required"); return; }
-            response.sendRedirect("tickets");
+            response.sendRedirect("tickets?message=" + message);
         }
         catch (Exception error) { throw new IOException(error); }
     }
